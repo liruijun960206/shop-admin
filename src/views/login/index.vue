@@ -1,6 +1,7 @@
 <template>
   <div class="login-wrap">
-    <div class="login-container"> <el-form label-position="top" label-width="80px" :model="loginForm" :rules="rules"  ref="ruleForm">
+    <div class="login-container">
+      <el-form label-position="top" label-width="80px" :model="loginForm" :rules="rules"  ref="ruleForm">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="loginForm.username"></el-input>
         </el-form-item>
@@ -16,7 +17,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { login } from '@/api'
+import { setToken } from '@/utils/auth'
 export default {
   name: 'Login',
   data () {
@@ -38,11 +40,16 @@ export default {
       })
     },
     async login () {
-      const loginForm = this.loginForm
-      const { meta } = (await axios.post('http://localhost:8888/api/private/v1/login', loginForm)).data
+      const { data, meta } = await login(this.loginForm)
       if (meta.status === 200) {
         this.$message({ message: '登陆成功', type: 'success'
         })
+        // window.localStorage.setItem('token', data.token)
+        setToken(data.token)
+        // this.$router.replace('/')
+        // console.log(this.$route)
+        const redirectUrl = this.$route.query.redirect || '/'
+        this.$router.replace(redirectUrl)
       } else {
         this.$message.error(`登录失败：${meta.msg}`)
       }

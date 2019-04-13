@@ -1,15 +1,15 @@
 <template>
   <div>
-    home
+    欢迎使用
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Home'
+
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>
